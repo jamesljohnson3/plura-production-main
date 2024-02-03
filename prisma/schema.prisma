@@ -7,7 +7,28 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+enum SpaceUserRole {
+    USER
+    ADMIN
+}
 
+enum InvitationStatus {
+    ACCEPTED
+    PENDING
+    DECLINED
+  REVOKED
+}
+
+enum SubscriptionType {
+    FREE
+    STANDARD
+    PREMIUM
+}
+
+enum TeamRole {
+    MEMBER
+    OWNER
+}
 enum Role {
   AGENCY_OWNER
   AGENCY_ADMIN
@@ -359,11 +380,6 @@ model SubAccountSidebarOption {
   @@index([subAccountId])
 }
 
-enum InvitationStatus {
-  ACCEPTED
-  REVOKED
-  PENDING
-}
 
 model Invitation {
   id       String           @id @default(uuid())
