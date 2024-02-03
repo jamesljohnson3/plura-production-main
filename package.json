@@ -18,6 +18,7 @@
     }
   },
   "dependencies": {
+    "@ably/spaces": "^0.3.0",
     "@auth/prisma-adapter": "^1.0.5",
     "@clerk/nextjs": "^4.29.1",
     "@clerk/themes": "^1.7.9",

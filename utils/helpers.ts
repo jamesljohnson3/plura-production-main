@@ -1,7 +1,6 @@
 "use client"
 
 import { type SpaceMember } from "@ably/spaces";
-import { generate } from "random-words";
 
 export const REMOVE_USER_AFTER_MILLIS = 120_000;
 export const MAX_USERS_BEFORE_LIST = 4;
