@@ -3,7 +3,7 @@
 import crypto from "crypto"
 import { sendEmail } from "@/actions/email"
 import { getUserByEmail, getUserByResetPasswordToken } from "@/actions/user"
-import  prisma  from "@/lib/db"
+import  prisma  from "@/lib/prisma"
 import { env } from "@/env.mjs"
 import bcrypt from "bcrypt"
 
