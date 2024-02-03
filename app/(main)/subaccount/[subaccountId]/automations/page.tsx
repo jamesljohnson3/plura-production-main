@@ -1,5 +1,6 @@
 import { db } from '@/lib/db';
 import React from 'react';
+import BlurPage from '@/components/global/blur-page'
 
 type Props = {
   params: { subaccountId: string };
@@ -8,7 +9,7 @@ type Props = {
   };
 };
 
-const SubaccountPageId = async ({ params, searchParams }: Props) => {
+const Myautomations = async ({ params, searchParams }: Props) => {
   const automation = await db.automation.findUnique({
     where: {
       id: params.subaccountId,
@@ -16,7 +17,9 @@ const SubaccountPageId = async ({ params, searchParams }: Props) => {
   });
 
   return (
-    <>
+    <>    <BlurPage>
+    <div className="flex flex-col justify-center items-center">
+      <div className="w-full h-full max-w-[800px]">
       {automation ? (
         <div key={automation.id}>
           <p>ID: {automation.id}</p>
@@ -26,8 +29,12 @@ const SubaccountPageId = async ({ params, searchParams }: Props) => {
       ) : (
         <p>No automation found</p>
       )}
+      </div>
+
+  </div>
+</BlurPage>
     </>
   );
 };
 
-export default SubaccountPageId;
+export default Myautomations;
