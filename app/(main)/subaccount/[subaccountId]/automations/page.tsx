@@ -1,6 +1,5 @@
 import { db } from '@/lib/db';
 import React from 'react';
-import BlurPage from '@/components/global/blur-page'
 
 type Props = {
   params: { subaccountId: string };
@@ -17,9 +16,7 @@ const Myautomations = async ({ params, searchParams }: Props) => {
   });
 
   return (
-    <>    <BlurPage>
-    <div className="flex flex-col justify-center items-center">
-      <div className="w-full h-full max-w-[800px]">
+    <>
       {automation ? (
         <div key={automation.id}>
           <p>ID: {automation.id}</p>
@@ -29,10 +26,6 @@ const Myautomations = async ({ params, searchParams }: Props) => {
       ) : (
         <p>No automation found</p>
       )}
-      </div>
-
-  </div>
-</BlurPage>
     </>
   );
 };
