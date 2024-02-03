@@ -1,48 +1,27 @@
-import { Button, buttonVariants } from "@/components/ui/button";
-import { fetchProfile } from "@/lib/data";
-import { MoreHorizontal, Settings } from "lucide-react";
-import type { Metadata, ResolvingMetadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { authOptions } from "@/auth";
+/* eslint-disable @next/next/no-img-element */
+import { Avatar } from "@/components/ui/avatar";
+import type { AvatarProps } from "@radix-ui/react-avatar";
+import type { User } from "next-auth";
+import Image from "next/image";
 
-type Props = {
-  params: {
-    username: string;
-  };
-  children: React.ReactNode;
+type Props = Partial<AvatarProps> & {
+  user: User | undefined;
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const username = params.username;
-
-  const profile = await fetchProfile(username);
-
-  return {
-    title: `${profile?.name} (@${profile?.username})`,
-  };
-}
-
-async function ProfileLayout({ children, params: { username } }: Props) {
-  const profile = await fetchProfile(username);
-  const params = await authOptions;
-  //   the followerId here is the id of the user who is following the profile
-  console.log("Fetched userId:", params);
-
-  // Rest of your code
-
-  if (!profile) {
-    notFound();
-  }
+function UserAvatar({ user, ...avatarProps }: Props) {
   return (
-    <>
-          {profile?.username}
-      
-    </>
+    <Avatar className="relative h-8 w-8" {...avatarProps}>
+      <img
+        src={
+          user?.image ||
+          "https://instagram.fpnq13-1.fna.fbcdn.net/v/t51.2885-19/44884218_345707102882519_2446069589734326272_n.jpg?_nc_ht=instagram.fpnq13-1.fna.fbcdn.net&_nc_cat=1&_nc_ohc=3yECqrWF0dkAX-1fQPX&edm=ALlQn9MBAAAA&ccb=7-5&ig_cache_key=YW5vbnltb3VzX3Byb2ZpbGVfcGlj.2-ccb7-5&oh=00_AfC4YI9GjTczPKHhpu6gUJwwPYXUTESZ1WNE1OrYzfSCZQ&oe=656D360F&_nc_sid=e7f676"
+        }
+         
+        alt={`${user?.name}'s profile picture`}
+        className="rounded-full object-cover"
+      />
+    </Avatar>
   );
 }
 
-export default ProfileLayout;
+export default UserAvatar;

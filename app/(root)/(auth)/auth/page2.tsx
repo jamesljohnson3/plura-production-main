@@ -2,7 +2,6 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { Spinner } from "@nextui-org/react";
-import { BackgroundGradient } from '@/components/gradients/background-gradient';
 import Cookies from 'js-cookie';
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from 'next/navigation'; // Import the useRouter hook
