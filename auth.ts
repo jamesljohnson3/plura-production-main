@@ -1,5 +1,5 @@
 import { getUserByEmail } from "@/actions/user"
-import  prisma  from "@/lib/db"
+import  prisma  from "@/lib/prisma"
 import { env } from "@/env.mjs"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import bcrypt from "bcrypt"

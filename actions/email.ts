@@ -8,7 +8,7 @@ import { type User } from "@prisma/client"
 import crypto from "crypto"
 import { EmailVerificationEmail } from "@/emails/email-verification-email"
 import { getUserByEmail } from "@/actions/user"
-import  prisma  from "@/lib/db"
+import  prisma  from "@/lib/prisma"
 import { NewEnquiryEmail } from "@/emails/new-enquiry-email"
 
 
