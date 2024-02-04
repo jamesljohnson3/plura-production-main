@@ -1,22 +1,40 @@
-import { authMiddleware } from '@clerk/nextjs'
+
+import { authMiddleware, clerkClient, redirectToSignIn } from '@clerk/nextjs';
 import { NextResponse } from 'next/server'
+import { Kafka } from "@upstash/kafka";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 export default authMiddleware({
-  publicRoutes: ['/site', "/login", '/api/uploadthing'],
-  async beforeAuth(auth, req) {},
-  async afterAuth(auth, req) {
-    //rewrite for domains
-    const url = req.nextUrl
-    const searchParams = url.searchParams.toString()
-    let hostname = req.headers
+  // Specify routes that should be accessible without authentication
+  publicRoutes: ["/", "/login"],
 
-    const pathWithSearchParams = `${url.pathname}${
-      searchParams.length > 0 ? `?${searchParams}` : ''
-    }`
-
+  // This function is called after the authentication middleware is executed
+  async afterAuth(auth, req, evt) {
+    // Allow all logged-in users to access every route
+    const kafka = new Kafka({
+      url: "https://liked-piglet-6365-us1-kafka.upstash.io",
+      username: 'bGlrZWQtcGlnbGV0LTYzNjUk-XvB4Hm_oqPYfzTP1WXaU_js62T6XamEcINxA14',
+      password: 'YzFmZTAxN2YtN2NjOS00MDA0LWI0ZGItMTdmNjQ2YzNmNDIx'
+    });
+   
+    const message = {
+      country: req.geo?.country,
+      city: req.geo?.city,
+      region: req.geo?.region,
+      url: req.url,
+      ip: req.headers.get("x-real-ip"),
+      mobile: req.headers.get("sec-ch-ua-mobile"),
+      platform: req.headers.get("sec-ch-ua-platform"),
+      useragent: req.headers.get("user-agent"),
+    };
+    
+     //rewrite for domains
+     const url = req.nextUrl
+     const searchParams = url.searchParams.toString()
+     let hostname = req.headers
+ 
+     const pathWithSearchParams = `${url.pathname}${
+       searchParams.length > 0 ? `?${searchParams}` : ''
+     }`
     //if subdomain exists
     const customSubDomain = hostname
       .get('host')
@@ -28,25 +46,20 @@ export default authMiddleware({
         new URL(`/${customSubDomain}${pathWithSearchParams}`, req.url)
       )
     }
-
-   
-
-    if (
-      url.pathname === '/' ||
-      (url.pathname === '/site' && url.host === process.env.NEXT_PUBLIC_DOMAIN)
-    ) {
-      return NextResponse.rewrite(new URL('/site', req.url))
+    if (auth.userId) {
+      return NextResponse.next();
     }
-
+    
     if (
       url.pathname.startsWith('/agency') ||
       url.pathname.startsWith('/subaccount')
     ) {
       return NextResponse.rewrite(new URL(`${pathWithSearchParams}`, req.url))
     }
+    // Redirect non-logged-in users to the sign-in route for other routes
   },
-})
+});
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)',"/((?!api|_next/static|_next/image|.png).*)", "/agency/((?!api|_next/static|_next/image|.png).*)", "/subaccount/((?!api|_next/static|_next/image|.png).*)" ]
 }
